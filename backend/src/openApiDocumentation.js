@@ -68,7 +68,6 @@ const openApiDocumentation = {
         tags: ['Ongs operations'],
         description: 'List of NGOs',
         operationId: 'ListOngs',
-        parameters: [],
         responses: {
           '200': {
             description: 'List of NGOs',
@@ -114,7 +113,6 @@ const openApiDocumentation = {
         tags: ['Incidents'],
         description: 'Create incident',
         operationId: 'createIncident',
-        parameters: [],
         requestBody: {
           content: {
             'application/json': {
@@ -161,22 +159,11 @@ const openApiDocumentation = {
       },
       get: {
         tags: ['Incidents'],
-        description: 'Create incident',
-        operationId: 'createIncident',
-        parameters: [],
-        requestBody: {
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/components/schemas/Incidents',
-              },
-            },
-          },
-          required: true,
-        },
+        description: 'Get incident',
+        operationId: 'getIncident',
         responses: {
           '200': {
-            description: 'New Ong created',
+            description: 'List of incidents',
           },
           '400': {
             description: 'Invalid parameters',
@@ -196,22 +183,15 @@ const openApiDocumentation = {
         tags: ['Incidents'],
         description: 'Delete incident',
         operationId: 'deleteIncident',
-        parameters: {
-          name: 'id',
-          in: 'path',
-        },
-        requestBody: {
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/components/schemas/Incidents',
-              },
-            },
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            type: 'integer',
           },
-          required: true,
-        },
+        ],
         responses: {
-          '200': {
+          '204': {
             description: 'Incident deleted',
           },
           '400': {
@@ -223,6 +203,70 @@ const openApiDocumentation = {
                 },
                 example: {
                   message: 'Operation not permited',
+                  internal_code: 'invalid_parameters',
+                },
+              },
+            },
+          },
+          '500': {
+            description: 'Internal Error Server',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Error',
+                },
+                example: {
+                  message: 'Internal error server',
+                  internal_code: 'internal_error_server',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/sessions': {
+      post: {
+        tags: ['Ongs operations'],
+        description: 'Ong login',
+        operationId: 'ong_login',
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Session',
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          '200': {
+            description: 'Logged succesfully',
+          },
+          '401': {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Error',
+                },
+                example: {
+                  message: 'Unauthorized to do login',
+                  internal_code: 'invalid_parameters',
+                },
+              },
+            },
+          },
+          '500': {
+            description: 'Internal Server Error',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Error',
+                },
+                example: {
+                  message: 'Internal Server Error',
                   internal_code: 'invalid_parameters',
                 },
               },
@@ -246,11 +290,19 @@ const openApiDocumentation = {
       },
     },
     schemas: {
+      Session: {
+        type: 'object',
+        properties: {
+          id: {
+            $ref: '#/components/schemas/ong_id',
+          },
+        },
+      },
       Ongs: {
         type: 'object',
         properties: {
           id: {
-            $ref: '#/components/schemas/id',
+            $ref: '#/components/schemas/ong_id',
           },
           name: {
             $ref: '#/components/schemas/name',
@@ -283,10 +335,10 @@ const openApiDocumentation = {
           },
         },
       },
-      id: {
+      ong_id: {
         type: 'string',
         description: 'Ong ID',
-        example: 1234,
+        example: 'd47idhd',
       },
       name: {
         type: 'string',
