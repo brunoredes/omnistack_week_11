@@ -73,7 +73,7 @@ export default function Register() {
             placeholder="Whatsapp"
             value={whatsapp}
             onChange={(e) => setWhatsapp(e.target.value)}
-            mask="(99) 99999-9999"
+            mask="+99 (99) 99999-9999"
           />
           <div className="input-group">
             <input
